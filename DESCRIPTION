@@ -1,0 +1,11 @@
+Package: shinyTests
+Title: This is a package for exploring various features of Shiny.
+Version: 0.0.0.9000
+Authors@R: 
+    person("Matthew", "Currier", , "currier.matthew@gmail.com", role = c("aut", "cre"),
+           comment = c(ORCID = "YOUR-ORCID-ID"))
+Description: This package is a series of module each of which explores and test some particular feature of Shiny.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.1
