@@ -27,6 +27,7 @@ salesUI <- function(id) {
     selectInput(ns("terr"), "Territory", choices = NULL),
     selectInput(ns("cn"), "Customer", choices = NULL),
     selectInput(ns("on"), "Order number", choices = NULL),
+    actionButton(ns("reset"), "Reset"),
     actionButton(ns("gobutton"), "Go!"),
     tableOutput(ns("data"))
   )
@@ -45,9 +46,20 @@ salesUI <- function(id) {
 
 salesServer <- function(id, df) {
   moduleServer(id, function(input, output, session) {
+    # Reset functionality
+    observeEvent(input$reset, {
+      # Reset territory to initial state
+      updateSelectInput(session, inputId = "terr", choices = sort(unique(df()$TERRITORY)))
+
+      # Clear other dropdowns
+      updateSelectInput(session, inputId = "cn", choices = NULL)
+      updateSelectInput(session, inputId = "on", choices = NULL)
+    })
+
+
 
     observeEvent(df(), {
-      choices <- unique(df()$TERRITORY)
+      choices <- sort(unique(df()$TERRITORY))
       updateSelectInput(session, inputId = "terr", choices = choices)
     })
     territory <- reactive({
