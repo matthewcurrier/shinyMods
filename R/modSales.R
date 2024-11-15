@@ -5,24 +5,8 @@
 #' @import dplyr
 #' @return A shiny module UI
 #' @export
-#'
-#' @examples
-#' salesUI("sales1")
-#'
-#' ui <- fluidPage(salesUI("sales1"))
-#'
-#' server <- function(input, output, session) {
-#'
-#'   salesServer("sales1", df = reactive({ sales }) )
-#'
-#' }
-#'
-#' shinyApp(ui, server)
-
-
 salesUI <- function(id) {
   ns <- NS(id)
-
   ui <- tagList(
     selectInput(ns("terr"), "Territory", choices = NULL),
     selectInput(ns("cn"), "Customer", choices = NULL),
@@ -40,90 +24,80 @@ salesUI <- function(id) {
 #' @import dplyr
 #' @return A shiny module Server
 #' @export
-#'
-#' @examples
-#' salesServer("sales1")
-
 salesServer <- function(id, df) {
   moduleServer(id, function(input, output, session) {
+    # Initialize reactive values
+    rv <- reactiveValues(
+      current_data = NULL,
+      needs_update = FALSE,
+      reset_counter = 0  # Add a counter to track resets
+    )
 
-    rv_reset <- reactiveVal(NULL)
-    rv_go <- reactiveVal(NULL)
     # Reset functionality
     observeEvent(input$reset, {
-      # Reset territory to initial state
-      updateSelectInput(session, inputId = "terr", choices = sort(unique(df()$TERRITORY)))
-
-      # Clear other dropdowns
+      updateSelectInput(session, inputId = "terr",
+                        choices = sort(unique(df()$TERRITORY)))
       updateSelectInput(session, inputId = "cn", choices = NULL)
       updateSelectInput(session, inputId = "on", choices = NULL)
-
-      output$data <- renderTable(NULL)
-
-      rv_go(NULL)
-      rv_reset(NULL)
+      rv$current_data <- NULL
+      rv$needs_update <- FALSE
+      rv$reset_counter <- rv$reset_counter + 1  # Increment reset counter
     })
 
-
+    # Initialize territory dropdown
     observeEvent(df(), {
       choices <- sort(unique(df()$TERRITORY))
       updateSelectInput(session, inputId = "terr", choices = choices)
     })
-    territory <- reactive({
-      req(df())
-      df() |>
-        filter(TERRITORY == input$terr)
-    })
-    observeEvent(territory(), {
+
+    # Update customer dropdown when territory changes
+    observeEvent(input$terr, {
       freezeReactiveValue(input, "cn")
-      choices <- sort(unique(territory()$CUSTOMERNAME))
+      filtered_data <- df()[df()$TERRITORY == input$terr, ]
+      choices <- sort(unique(filtered_data$CUSTOMERNAME))
       updateSelectInput(session, inputId = "cn", choices = choices)
+      rv$needs_update <- TRUE
     })
 
-    customer <- reactive({
-      req(input$cn)
-      filter(territory(), CUSTOMERNAME == input$cn)
-    })
-
-    observeEvent(customer(), {
+    # Update order number dropdown when customer changes
+    observeEvent(input$cn, {
+      req(input$terr, input$cn)
       freezeReactiveValue(input, "on")
-      choices <- sort(unique(customer()$ORDERNUMBER))
+      filtered_data <- df()[df()$TERRITORY == input$terr &
+                              df()$CUSTOMERNAME == input$cn, ]
+      choices <- sort(unique(filtered_data$ORDERNUMBER))
       updateSelectInput(session, inputId = "on", choices = choices)
+      rv$needs_update <- TRUE
     })
 
-
-
-
+    # Update table only when Go button is clicked
     observeEvent(input$gobutton, {
+      req(input$terr, input$cn, input$on)
 
-      rv_go(1)
-      rv_reset(NULL)
+      rv$current_data <- df() %>%
+        filter(
+          TERRITORY == input$terr,
+          CUSTOMERNAME == input$cn,
+          ORDERNUMBER == input$on
+        ) %>%
+        select(QUANTITYORDERED, PRICEEACH, PRODUCTCODE)
 
+      rv$needs_update <- FALSE
+    }, ignoreNULL = FALSE, ignoreInit = FALSE)  # Modified these parameters
+
+    # Render table based on current_data
+    output$data <- renderTable({
+      # Observe reset_counter to ensure reactivity after reset
+      rv$reset_counter
+      rv$current_data
     })
-
-    observeEvent(rv_go(), {
-      req(rv_go())
-      output$data <- renderTable({
-        customer() |>
-          filter(ORDERNUMBER == input$on) %>%
-          select(QUANTITYORDERED, PRICEEACH, PRODUCTCODE)
-      })
-
-      rv_go(NULL)
-      rv_reset(NULL)
-    })
-
-
   })
 }
-
-
-
 
 ui <- fluidPage(salesUI("sales1"))
 
 server <- function(input, output, session) {
-  salesServer("sales1", df = reactive({ sales }) )
+  salesServer("sales1", df = reactive({ sales }))
 }
 
 shinyApp(ui, server)
