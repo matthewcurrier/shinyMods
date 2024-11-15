@@ -46,6 +46,9 @@ salesUI <- function(id) {
 
 salesServer <- function(id, df) {
   moduleServer(id, function(input, output, session) {
+
+    rv_reset <- reactiveVal(NULL)
+    rv_go <- reactiveVal(NULL)
     # Reset functionality
     observeEvent(input$reset, {
       # Reset territory to initial state
@@ -54,8 +57,12 @@ salesServer <- function(id, df) {
       # Clear other dropdowns
       updateSelectInput(session, inputId = "cn", choices = NULL)
       updateSelectInput(session, inputId = "on", choices = NULL)
-    })
 
+      output$data <- renderTable(NULL)
+
+      rv_go(NULL)
+      rv_reset(NULL)
+    })
 
 
     observeEvent(df(), {
@@ -77,18 +84,35 @@ salesServer <- function(id, df) {
       req(input$cn)
       filter(territory(), CUSTOMERNAME == input$cn)
     })
+
     observeEvent(customer(), {
       freezeReactiveValue(input, "on")
       choices <- sort(unique(customer()$ORDERNUMBER))
       updateSelectInput(session, inputId = "on", choices = choices)
     })
 
-    output$data <- renderTable({
-      req(input$on)
-      customer() |>
-        filter(ORDERNUMBER == input$on) %>%
-        select(QUANTITYORDERED, PRICEEACH, PRODUCTCODE)
-    }) |> bindEvent(input$gobutton, ignoreInit = TRUE)
+
+
+
+    observeEvent(input$gobutton, {
+
+      rv_go(1)
+      rv_reset(NULL)
+
+    })
+
+    observeEvent(rv_go(), {
+      req(rv_go())
+      output$data <- renderTable({
+        customer() |>
+          filter(ORDERNUMBER == input$on) %>%
+          select(QUANTITYORDERED, PRICEEACH, PRODUCTCODE)
+      })
+
+      rv_go(NULL)
+      rv_reset(NULL)
+    })
+
 
   })
 }
