@@ -17,6 +17,3 @@ A shiny module Server
 \description{
 The salesServer module to generate code.
 }
-\examples{
-salesServer("sales1")
-}

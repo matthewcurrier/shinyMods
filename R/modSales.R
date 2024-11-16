@@ -74,12 +74,12 @@ salesServer <- function(id, df) {
     observeEvent(input$gobutton, {
       req(input$terr, input$cn, input$on)
 
-      rv$current_data <- df() %>%
+      rv$current_data <- df() |>
         filter(
           TERRITORY == input$terr,
           CUSTOMERNAME == input$cn,
           ORDERNUMBER == input$on
-        ) %>%
+        ) |>
         select(QUANTITYORDERED, PRICEEACH, PRODUCTCODE)
 
       rv$needs_update <- FALSE

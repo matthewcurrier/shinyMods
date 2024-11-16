@@ -15,16 +15,3 @@ A shiny module UI
 \description{
 The salesUI module to generate code.
 }
-\examples{
-salesUI("sales1")
-
-ui <- fluidPage(salesUI("sales1"))
-
-server <- function(input, output, session) {
-
-  salesServer("sales1", df = reactive({ sales }) )
-
-}
-
-shinyApp(ui, server)
-}
