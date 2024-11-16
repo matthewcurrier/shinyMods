@@ -61,6 +61,14 @@ pointMapServer <- function(id, df) {
       rv$current_data <- NULL
       rv$needs_update <- FALSE
       rv$reset_counter <- rv$reset_counter + 1  # Increment reset counter
+
+      # Render map
+      output$map <- renderLeaflet({
+        # Create base map even if no data is selected yet
+        leaflet() |>
+          addTiles() |>
+          setView(lng = 0, lat = 0, zoom = 2)
+      })
     })
 
     # Initialize territory dropdown
