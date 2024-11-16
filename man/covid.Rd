@@ -3,7 +3,7 @@
 \docType{data}
 \name{covid}
 \alias{covid}
-\title{A sales dataset suggested in the Mastering Shiny book}
+\title{A covid dataset from Kaggle, used to test point mapping with the leaflet package}
 \format{
 \subsection{\code{covid}}{
 
@@ -17,6 +17,6 @@ A data frame with 20,706 rows and 11 columns
 covid
 }
 \description{
-A sales dataset suggested in the Mastering Shiny book
+A covid dataset from Kaggle, used to test point mapping with the leaflet package
 }
 \keyword{datasets}
