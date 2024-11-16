@@ -1,5 +1,5 @@
 Package: shinyTests
-Title: This is a package for exploring various features of Shiny.
+Title: This is a package for exploring various features of Shiny
 Version: 0.0.0.9000
 Authors@R: 
     person("Matthew", "Currier", , "currier.matthew@gmail.com", role = c("aut", "cre"),
@@ -13,7 +13,8 @@ Imports:
     dplyr,
     leaflet,
     sf,
-    shiny
+    shiny,
+    stringr
 Depends: 
     R (>= 2.10)
 LazyData: true
