@@ -1,0 +1,18 @@
+---
+title: "understanding-the-modSales-module"
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(shinyTests)
+```
+
+## Understanding the `modSales` module
+
+This shoujld be fun.
