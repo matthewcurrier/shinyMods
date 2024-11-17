@@ -8,7 +8,12 @@
 #' @return A shiny module UI
 #' @export
 #' @examples
-#' pointMapUI("pointmaptest")
+#' ui <- fluidPage(pointMapUI("pointmaptest"))
+#'
+#' server <- function(input, output, session) {
+#'   pointMapServer("pointmaptest", df = reactive({ covid }))
+#' }
+#' shinyApp(ui, server)
 pointMapUI <- function(id) {
   ns <- NS(id)
   ui <- tagList(
@@ -32,9 +37,12 @@ pointMapUI <- function(id) {
 #' @return A shiny module server
 #' @export
 #' @examples
-#' pointMapServer("pointmaptest", df)
-
-
+#' ui <- fluidPage(pointMapUI("pointmaptest"))
+#'
+#' server <- function(input, output, session) {
+#'   pointMapServer("pointmaptest", df = reactive({ covid }))
+#' }
+#' shinyApp(ui, server)
 pointMapServer <- function(id, df) {
   moduleServer(id, function(input, output, session) {
     # aggregated dataset
