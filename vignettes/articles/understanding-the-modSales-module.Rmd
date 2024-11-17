@@ -1,5 +1,5 @@
 ---
-title: "understanding-the-modSales-module"
+title: "Under the Hood: The modSales Shiny module"
 ---
 
 ```{r, include = FALSE}
