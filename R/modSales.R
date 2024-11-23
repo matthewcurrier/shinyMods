@@ -29,7 +29,6 @@ salesServer <- function(id, df) {
     # Initialize reactive values
     rv <- reactiveValues(
       current_data = NULL,
-      # needs_update = FALSE,
       reset_counter = 0  # Add a counter to track resets
     )
 
@@ -40,7 +39,6 @@ salesServer <- function(id, df) {
       updateSelectInput(session, inputId = "cn", choices = NULL)
       updateSelectInput(session, inputId = "on", choices = NULL)
       rv$current_data <- NULL
-      # rv$needs_update <- FALSE
       rv$reset_counter <- rv$reset_counter + 1  # Increment reset counter
     })
 
@@ -56,7 +54,7 @@ salesServer <- function(id, df) {
       filtered_data <- df()[df()$TERRITORY == input$terr, ]
       choices <- sort(unique(filtered_data$CUSTOMERNAME))
       updateSelectInput(session, inputId = "cn", choices = choices)
-      # rv$needs_update <- TRUE
+
     })
 
     # Update order number dropdown when customer changes
@@ -67,7 +65,7 @@ salesServer <- function(id, df) {
                               df()$CUSTOMERNAME == input$cn, ]
       choices <- sort(unique(filtered_data$ORDERNUMBER))
       updateSelectInput(session, inputId = "on", choices = choices)
-      # rv$needs_update <- TRUE
+
     })
 
     # Update table only when Go button is clicked
@@ -82,12 +80,14 @@ salesServer <- function(id, df) {
         ) |>
         select(QUANTITYORDERED, PRICEEACH, PRODUCTCODE)
 
-      # rv$needs_update <- FALSE
     }, ignoreNULL = FALSE, ignoreInit = FALSE)  # Modified these parameters
 
     # Render table based on current_data
     output$data <- renderTable({
       # Observe reset_counter to ensure reactivity after reset
+      # creates a dependency that ensures the table will always update when the reset button is clicked.
+      # Even though the counter value isn't directly used in the table display,
+      # its change triggers the reactivity system
       rv$reset_counter
       rv$current_data
     })

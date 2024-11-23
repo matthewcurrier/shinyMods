@@ -17,6 +17,9 @@
 pointMapUI <- function(id) {
   ns <- NS(id)
   ui <- tagList(
+    tags$script(
+      src = "https://cdn.jsdelivr.net/gh/Appsilon/shiny.tictoc@v0.2.0/shiny-tic-toc.min.js"
+    ),
     selectInput(ns("cntry"), "Country", choices = NULL),
     selectInput(ns("st"), "State", choices = NULL),
     actionButton(ns("reset"), "Reset"),
@@ -46,6 +49,7 @@ pointMapUI <- function(id) {
 pointMapServer <- function(id, df) {
   moduleServer(id, function(input, output, session) {
     # aggregated dataset
+
     agg_data <- reactive({
       df() |>
         group_by(country, state, lat_jittered, lon_jittered) |>
@@ -54,6 +58,7 @@ pointMapServer <- function(id, df) {
           .groups = 'drop'
         )
     })
+
     # Initialize reactive values
     rv <- reactiveValues(
       current_data = NULL,
