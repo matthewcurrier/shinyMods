@@ -1,6 +1,6 @@
 #' The salesUI module to generate code.
 #'
-#' @param id namespace id
+#' @param id namespace id for the module
 #' @import shiny
 #' @import dplyr
 #' @return A shiny module UI
