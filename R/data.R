@@ -12,3 +12,13 @@
 #' A data frame with 20,706 rows and 11 columns
 #' @source <https://www.kaggle.com/datasets/grebublin/coronavirus-latlon-dataset>
 "covid"
+#' A small us migration table downloaded with help from tidycensus
+#'
+#'
+#' @format ## `us_migration`
+#' A data frame with 52 rows and 7 columns
+"us_migration"
+
+
+
+
