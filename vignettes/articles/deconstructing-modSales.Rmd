@@ -1,0 +1,53 @@
+---
+title: "deconstructing-modSales"
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(shinyMods)
+```
+
+```{r}
+#' The salesUI module to generate code.
+#'
+#' @param id namespace id
+#' @import shiny
+#' @import dplyr
+#' @return A shiny module UI
+#' @export
+salesUI <- function(id) {
+
+  ns <- NS(id)
+  ui <- tagList(
+    tags$script(
+      src = "https://cdn.jsdelivr.net/gh/Appsilon/shiny.tictoc@v0.2.0/shiny-tic-toc.min.js"
+    ),
+    selectInput(ns("terr"), "Territory", choices = NULL),
+    selectInput(ns("cn"), "Customer", choices = NULL),
+    selectInput(ns("on"), "Order number", choices = NULL),
+    actionButton(ns("reset"), "Reset"),
+    actionButton(ns("gobutton"), "Go!"),
+    tableOutput(ns("data"))
+  )
+}
+```
+
+In the above code we have user interface portion of our shiny module. We are using the sales dataset.
+
+```{r}
+library(tidyverse)
+glimpse(sales)
+```
+
+
+So we have three selects which form a natural hierarchy. We have a territory, customer and order number. We also have a reset button and a go button. The table output will show the data.
+
+
+
+
