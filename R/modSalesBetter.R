@@ -12,8 +12,8 @@ salesUI <- function(id) {
       src = "https://cdn.jsdelivr.net/gh/Appsilon/shiny.tictoc@v0.2.0/shiny-tic-toc.min.js"
     ),
     selectInput(ns("lev1"), "Territory", choices = NULL),
-    selectInput(ns("cn"), "Customer", choices = NULL),
-    selectInput(ns("on"), "Order number", choices = NULL),
+    selectInput(ns("lev2"), "Customer", choices = NULL),
+    selectInput(ns("lev3"), "Order number", choices = NULL),
     actionButton(ns("reset"), "Reset"),
     actionButton(ns("gobutton"), "Go!"),
     textOutput(ns("message")),
@@ -24,6 +24,7 @@ salesUI <- function(id) {
 #' The salesServer module to generate code.
 #' @param id namespace id
 #' @param df a reactive dataframe with the data
+#' @param cols_list a list of columns that will create the dropdowns selections
 #' @import shiny
 #' @import dplyr
 #' @return A shiny module Server
@@ -35,7 +36,9 @@ salesServer <- function(id, df, cols_list) {
       current_data = NULL,
       reset_counter = 0,
       show_message = TRUE,
-      level_1 = cols_list[["level_1"]]  # Store the column name here
+      level_1 = cols_list[["level_1"]],  # Store the column name here
+      level_2 = cols_list[["level_2"]],
+      level_3 = cols_list[["level_3"]]
     )
 
     output$message <- renderText({
@@ -48,10 +51,19 @@ salesServer <- function(id, df, cols_list) {
 
     # Reset functionality
     observeEvent(input$reset, {
+      # First, update the level 1 dropdown with all possible values
       updateSelectInput(session, inputId = "lev1",
                         choices = sort(unique(df()[[rv$level_1]])))
-      updateSelectInput(session, inputId = "cn", choices = NULL)
-      updateSelectInput(session, inputId = "on", choices = NULL)
+
+      # Then update level 2 based on the new level 1 selection
+      filtered_data_l2 <- df()[df()[[rv$level_1]] == input$lev1, ]
+      updateSelectInput(session, inputId = "lev2",
+                        choices = sort(unique(filtered_data_l2[[rv$level_2]])))
+
+      # Finally update level 3 based on both level 1 and 2 selections
+      filtered_data_l3 <- filtered_data_l2[filtered_data_l2[[rv$level_2]] == input$lev2, ]
+      updateSelectInput(session, inputId = "lev3",
+                        choices = sort(unique(filtered_data_l3[[rv$level_3]])))
       rv$current_data <- NULL
       rv$reset_counter <- rv$reset_counter + 1
       rv$show_message <- TRUE
@@ -67,36 +79,48 @@ salesServer <- function(id, df, cols_list) {
 
     # Update customer dropdown when territory changes
     observeEvent(input[["lev1"]], {
-      freezeReactiveValue(input, "cn")
+      freezeReactiveValue(input, "lev2")
       filtered_data <- df()[df()[[rv$level_1]] == input[["lev1"]], ]
-      choices <- sort(unique(filtered_data$CUSTOMERNAME))
-      updateSelectInput(session, inputId = "cn", choices = choices)
+      choices <- sort(unique(filtered_data[[rv$level_2]]))
+      updateSelectInput(session, inputId = "lev2", choices = choices)
       rv$current_data <- NULL
       rv$show_message <- TRUE
     })
 
     # Update order number dropdown when customer changes
-    observeEvent(input$cn, {
-      req(input[["lev1"]], input$cn)
-      freezeReactiveValue(input, "on")
+    observeEvent(input[["lev2"]], {
+      req(input[["lev1"]], input[["lev2"]])
+      freezeReactiveValue(input, "lev3")
       filtered_data <- df()[df()[[rv$level_1]] == input[["lev1"]] &
-                              df()$CUSTOMERNAME == input$cn, ]
-      choices <- sort(unique(filtered_data$ORDERNUMBER))
-      updateSelectInput(session, inputId = "on", choices = choices)
+                              df()[[rv$level_2]] == input[["lev2"]], ]
+      choices <- sort(unique(filtered_data[[rv$level_3]]))
+      updateSelectInput(session, inputId = "lev3", choices = choices)
+      rv$current_data <- NULL
+      rv$show_message <- TRUE
+    })
+
+    # Update order number dropdown when customer changes
+    observeEvent(input[["lev3"]], {
+      req(input[["lev1"]], input[["lev2"]], input[["lev3"]])
+      filtered_data <- df()[df()[[rv$level_1]] == input[["lev1"]] &
+                              df()[[rv$level_2]] == input[["lev2"]] &
+                              df()[[rv$level_3]] == input[["lev3"]], ]
+      # choices <- sort(unique(filtered_data[[rv$level_3]]))
+      # updateSelectInput(session, inputId = "lev3", choices = choices)
       rv$current_data <- NULL
       rv$show_message <- TRUE
     })
 
     # Update table only when Go button is clicked
     observeEvent(input$gobutton, {
-      req(input[["lev1"]], input$cn, input$on)
+      req(input[["lev1"]], input[["lev2"]], input[["lev3"]])
       rv$current_data <- df() |>
         filter(
-          !!sym(rv$level_1) == input[["lev1"]],  # Use !!sym() for dynamic filtering
-          CUSTOMERNAME == input$cn,
-          ORDERNUMBER == input$on
+          !!sym(rv$level_1) == input[["lev1"]],
+          !!sym(rv$level_2) == input[["lev2"]],
+          !!sym(rv$level_3) == input[["lev3"]]
         ) |>
-        select(QUANTITYORDERED, PRICEEACH, PRODUCTCODE)
+        select(TERRITORY, CUSTOMERNAME,QUANTITYORDERED, PRICEEACH, PRODUCTCODE, ORDERNUMBER)
       rv$show_message <- FALSE
     }, ignoreNULL = FALSE, ignoreInit = FALSE)
 
@@ -111,6 +135,12 @@ salesServer <- function(id, df, cols_list) {
 # App definition
 ui <- fluidPage(salesUI("sales1"))
 server <- function(input, output, session) {
-  salesServer("sales1", df = reactive({ sales }), list(level_1 = "TERRITORY"))
+  salesServer("sales1",
+              df = reactive({ sales }),
+              list(
+                level_1 = "TERRITORY",
+                level_2 = "CUSTOMERNAME",
+                level_3 = "ORDERNUMBER")
+              )
 }
 shinyApp(ui, server)
