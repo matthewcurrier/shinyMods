@@ -24,21 +24,22 @@ salesUI <- function(id) {
 #' The salesServer module to generate code.
 #' @param id namespace id
 #' @param df a reactive dataframe with the data
-#' @param cols_list a list of columns that will create the dropdowns selections
+#' @param dropdowns a list of three columns that will create the dropdown hiearchy
+#' @param cols_for_table table columns to display in table
 #' @import shiny
 #' @import dplyr
 #' @return A shiny module Server
 #' @export
-salesServer <- function(id, df, cols_list) {
+salesServer <- function(id, df, dropdowns, cols_for_table) {
   moduleServer(id, function(input, output, session) {
     # Store level_1 in a reactive value to ensure proper reactivity
     rv <- reactiveValues(
       current_data = NULL,
       reset_counter = 0,
       show_message = TRUE,
-      level_1 = cols_list[["level_1"]],  # Store the column name here
-      level_2 = cols_list[["level_2"]],
-      level_3 = cols_list[["level_3"]]
+      level_1 = dropdowns[["level_1"]],  # Store the column name here
+      level_2 = dropdowns[["level_2"]],
+      level_3 = dropdowns[["level_3"]]
     )
 
     output$message <- renderText({
@@ -120,7 +121,7 @@ salesServer <- function(id, df, cols_list) {
           !!sym(rv$level_2) == input[["lev2"]],
           !!sym(rv$level_3) == input[["lev3"]]
         ) |>
-        select(TERRITORY, CUSTOMERNAME,QUANTITYORDERED, PRICEEACH, PRODUCTCODE, ORDERNUMBER)
+        select(any_of(cols_for_table))
       rv$show_message <- FALSE
     }, ignoreNULL = FALSE, ignoreInit = FALSE)
 
@@ -137,10 +138,12 @@ ui <- fluidPage(salesUI("sales1"))
 server <- function(input, output, session) {
   salesServer("sales1",
               df = reactive({ sales }),
-              list(
+              dropdowns = list(
                 level_1 = "TERRITORY",
                 level_2 = "CUSTOMERNAME",
                 level_3 = "ORDERNUMBER")
+              ,
+              cols_for_table = c("TERRITORY", "CUSTOMERNAME", "ORDERNUMBER", "SALES")
               )
 }
 shinyApp(ui, server)
