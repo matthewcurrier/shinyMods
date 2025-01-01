@@ -1,8 +1,6 @@
 #' The salesUI module to generate code.
 #'
 #' @param id namespace id
-#' @import shiny
-#' @import dplyr
 #' @return A shiny module UI
 #' @export
 salesUI <- function(id) {
@@ -26,8 +24,6 @@ salesUI <- function(id) {
 #' @param df a reactive dataframe with the data
 #' @param dropdowns a list of three columns that will create the dropdown hiearchy
 #' @param cols_for_table table columns to display in table
-#' @import shiny
-#' @import dplyr
 #' @return A shiny module Server
 #' @export
 salesServer <- function(id, df, dropdowns, cols_for_table) {
@@ -147,3 +143,20 @@ server <- function(input, output, session) {
               )
 }
 shinyApp(ui, server)
+
+
+
+#
+# ui <- fluidPage(salesUI("cars"))
+# server <- function(input, output, session) {
+#   salesServer("cars",
+#               df = reactive({ mtcars }),
+#               dropdowns = list(
+#                 level_1 = "cyl",
+#                 level_2 = "gear",
+#                 level_3 = "carb")
+#               ,
+#               cols_for_table = c("mpg", "cyl", "disp", "hp", "wt")
+#   )
+# }
+# shinyApp(ui, server)

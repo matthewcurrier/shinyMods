@@ -8,6 +8,7 @@
 #' @return A shiny module UI
 #' @export
 #' @examples
+#' library(shiny)
 #' ui <- fluidPage(pointMapUI("pointmaptest"))
 #'
 #' server <- function(input, output, session) {
@@ -155,14 +156,3 @@ pointMapServer <- function(id, df) {
     })
   })
 }
-
-
-
-
-ui <- fluidPage(pointMapUI("pointmaptest"))
-
-server <- function(input, output, session) {
-  pointMapServer("pointmaptest", df = reactive({ covid }))
-}
-
-shinyApp(ui, server)

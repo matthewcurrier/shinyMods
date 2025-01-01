@@ -1,12 +1,12 @@
 #' The leafletMapUI module to generate the user interface
 #'
 #' @param id namespace id
-#' @import shiny
 #' @import sf
 #' @import leaflet
 #' @return A shiny module UI
 #' @export
 #' @examples
+#' library(shiny)
 #' ui <- fluidPage(pointMapUI("pointmaptest"))
 #'
 #' server <- function(input, output, session) {
@@ -31,13 +31,18 @@ leafletMapUI <- function(id) {
 #' The leafletMapServer module to generate the map and interactivity
 #' @param id namespace id
 #' @param df data frame
-#' @import shiny
-#' @import dplyr
 #' @import sf
 #' @import leaflet
 #' @return A shiny module server
 #' @export
 #' @examples
+#' library(shiny)
+#' ui <- fluidPage(pointMapUI("pointmaptest"))
+#'
+#' server <- function(input, output, session) {
+#'   pointMapServer("pointmaptest", df = reactive({ covid }))
+#' }
+#' shinyApp(ui, server)
 leafletMapServer <- function(id, df) {
   moduleServer(id, function(input, output, session) {
 })

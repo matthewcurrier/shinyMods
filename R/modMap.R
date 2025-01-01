@@ -11,6 +11,7 @@
 #' @import sf
 #' @export
 #' @examples
+#' library(shiny)
 #' ui <- fluidPage(mapUI("map1"))
 #'
 #' server <- function(input, output, session) {

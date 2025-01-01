@@ -4,16 +4,18 @@
 \alias{salesServer}
 \title{The salesServer module to generate code.}
 \usage{
-salesServer(id, df, cols_list)
+salesServer(id, df, dropdowns, cols_for_table)
 
-salesServer(id, df, cols_list)
+salesServer(id, df, dropdowns, cols_for_table)
 }
 \arguments{
 \item{id}{namespace id}
 
 \item{df}{a reactive dataframe with the data}
 
-\item{cols_list}{a list of columns that will create the dropdowns selections}
+\item{dropdowns}{a list of three columns that will create the dropdown hiearchy}
+
+\item{cols_for_table}{table columns to display in table}
 }
 \value{
 A shiny module Server
