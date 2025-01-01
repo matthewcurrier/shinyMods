@@ -12,6 +12,8 @@ salesServer(id, df, cols_list)
 \item{id}{namespace id}
 
 \item{df}{a reactive dataframe with the data}
+
+\item{cols_list}{a list of columns that will create the dropdowns selections}
 }
 \value{
 A shiny module Server
