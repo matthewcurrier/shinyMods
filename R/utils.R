@@ -1,4 +1,3 @@
-# R/utils.R
 #' Get Census Data
 #'
 #' @param ethnicity Character string specifying the ethnicity to query
