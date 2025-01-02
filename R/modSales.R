@@ -126,8 +126,3 @@ salesServer <- function(id, df) {
   })
 }
 
-ui <- fluidPage(salesUI("sales1"))
-server <- function(input, output, session) {
-  salesServer("sales1", df = reactive({ sales }))
-}
-shinyApp(ui, server)
