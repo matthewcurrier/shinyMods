@@ -5,7 +5,11 @@
 #' @return sf object with county geometries and population data
 #' @import tidycensus
 #' @import sf
-#' @import dplyr
+#' @examples
+#' \donttest {
+#' library(tidycensus)
+#' get_census_data("white")
+#' }
 get_census_data <- function(ethnicity) {
   # Variable codes for different ethnicities
   var_codes <- list(
