@@ -35,4 +35,33 @@ server <- function(input, output, session) {
 }
 shinyApp(ui, server)
 }
+\donttest{
+ui <- fluidPage(salesUI("sales1"))
+server <- function(input, output, session) {
+  salesServer("sales1",
+              df = reactive({ sales }),
+              dropdowns = list(
+                level_1 = "TERRITORY",
+                level_2 = "CUSTOMERNAME",
+                level_3 = "ORDERNUMBER")
+              ,
+              cols_for_table = c("TERRITORY", "CUSTOMERNAME", "ORDERNUMBER", "SALES")
+              )
+}
+shinyApp(ui, server)
+ui <- fluidPage(salesUI("cars"))
+server <- function(input, output, session) {
+  salesServer("cars",
+              df = reactive({ mtcars }),
+              dropdowns = list(
+                level_1 = "cyl",
+                level_2 = "gear",
+                level_3 = "carb")
+              ,
+              cols_for_table = c("mpg", "cyl", "disp", "hp", "wt")
+  )
+}
+shinyApp(ui, server)
+}
+
 }

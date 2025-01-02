@@ -25,6 +25,13 @@ The salesUI module to generate code.
 \donttest{
 ui <- fluidPage(salesUI("sales1"))
 server <- function(input, output, session) {
+  salesServer("sales1", df = reactive({ sales }))
+}
+shinyApp(ui, server)
+}
+\donttest{
+ui <- fluidPage(salesUI("sales1"))
+server <- function(input, output, session) {
   salesServer("sales1",
               df = reactive({ sales }),
               dropdowns = list(
