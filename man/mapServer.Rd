@@ -2,12 +2,14 @@
 % Please edit documentation in R/modMap.R
 \name{mapServer}
 \alias{mapServer}
-\title{County Map Module UI}
+\title{County Map Module Server}
 \usage{
 mapServer(id, df)
 }
 \arguments{
 \item{id}{The module ID used to create a namespace}
+
+\item{df}{The dataframe to pass}
 }
 \value{
 A Shiny module element containing the map interface
