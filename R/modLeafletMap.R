@@ -6,6 +6,7 @@
 #' @return A shiny module UI
 #' @export
 #' @examples
+#' \donttest{
 #' library(shiny)
 #' ui <- fluidPage(pointMapUI("pointmaptest"))
 #'
@@ -13,6 +14,7 @@
 #'   pointMapServer("pointmaptest", df = reactive({ covid }))
 #' }
 #' shinyApp(ui, server)
+#' }
 leafletMapUI <- function(id) {
   ns <- NS(id)
   ui <- tagList(
@@ -36,6 +38,7 @@ leafletMapUI <- function(id) {
 #' @return A shiny module server
 #' @export
 #' @examples
+#' \donttest{
 #' library(shiny)
 #' ui <- fluidPage(pointMapUI("pointmaptest"))
 #'
@@ -43,6 +46,7 @@ leafletMapUI <- function(id) {
 #'   pointMapServer("pointmaptest", df = reactive({ covid }))
 #' }
 #' shinyApp(ui, server)
+#' }
 leafletMapServer <- function(id, df) {
   moduleServer(id, function(input, output, session) {
 })

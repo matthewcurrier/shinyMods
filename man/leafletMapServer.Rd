@@ -18,6 +18,7 @@ A shiny module server
 The leafletMapServer module to generate the map and interactivity
 }
 \examples{
+\donttest{
 library(shiny)
 ui <- fluidPage(pointMapUI("pointmaptest"))
 
@@ -25,4 +26,5 @@ server <- function(input, output, session) {
   pointMapServer("pointmaptest", df = reactive({ covid }))
 }
 shinyApp(ui, server)
+}
 }

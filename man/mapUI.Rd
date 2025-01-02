@@ -17,6 +17,7 @@ Creates the UI portion of the county map module for displaying
 demographic data choropleth visualizations.
 }
 \examples{
+\donttest{
 library(shiny)
 ui <- fluidPage(mapUI("map1"))
 
@@ -27,4 +28,5 @@ server <- function(input, output, session) {
 
  }
 shinyApp(ui, server)
+}
 }

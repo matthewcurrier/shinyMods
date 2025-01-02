@@ -16,6 +16,7 @@ A shiny module UI
 The pointMapUI module to generate the user interface
 }
 \examples{
+\donttest{
 library(shiny)
 ui <- fluidPage(pointMapUI("pointmaptest"))
 
@@ -23,4 +24,5 @@ server <- function(input, output, session) {
   pointMapServer("pointmaptest", df = reactive({ covid }))
 }
 shinyApp(ui, server)
+}
 }

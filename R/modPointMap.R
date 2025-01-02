@@ -1,13 +1,12 @@
 #' The pointMapUI module to generate the user interface
 #'
 #' @param id namespace id
-#' @import shiny
-#' @import dplyr
 #' @import sf
 #' @import leaflet
 #' @return A shiny module UI
 #' @export
 #' @examples
+#' \donttest{
 #' library(shiny)
 #' ui <- fluidPage(pointMapUI("pointmaptest"))
 #'
@@ -15,6 +14,7 @@
 #'   pointMapServer("pointmaptest", df = reactive({ covid }))
 #' }
 #' shinyApp(ui, server)
+#' }
 pointMapUI <- function(id) {
   ns <- NS(id)
   ui <- tagList(
@@ -34,19 +34,19 @@ pointMapUI <- function(id) {
 #'
 #' @param id namespace id
 #' @param df data frame
-#' @import shiny
-#' @import dplyr
 #' @import sf
 #' @import leaflet
 #' @return A shiny module server
 #' @export
 #' @examples
+#' \donttest{
 #' ui <- fluidPage(pointMapUI("pointmaptest"))
 #'
 #' server <- function(input, output, session) {
 #'   pointMapServer("pointmaptest", df = reactive({ covid }))
 #' }
 #' shinyApp(ui, server)
+#' }
 pointMapServer <- function(id, df) {
   moduleServer(id, function(input, output, session) {
     # aggregated dataset

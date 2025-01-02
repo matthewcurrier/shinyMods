@@ -3,6 +3,24 @@
 #' @param id namespace id
 #' @return A shiny module UI
 #' @export
+#' @examples
+#' \donttest{
+#' ui <- fluidPage(salesUI("sales1"))
+#' server <- function(input, output, session) {
+#'   salesServer("sales1",
+#'               df = reactive({ sales }),
+#'               dropdowns = list(
+#'                 level_1 = "TERRITORY",
+#'                 level_2 = "CUSTOMERNAME",
+#'                 level_3 = "ORDERNUMBER")
+#'               ,
+#'               cols_for_table = c("TERRITORY", "CUSTOMERNAME", "ORDERNUMBER", "SALES")
+#'               )
+#' }
+#' shinyApp(ui, server)
+#' }
+
+
 salesUI <- function(id) {
   ns <- NS(id)
   ui <- tagList(
@@ -26,6 +44,37 @@ salesUI <- function(id) {
 #' @param cols_for_table table columns to display in table
 #' @return A shiny module Server
 #' @export
+#' \donttest{
+#' ui <- fluidPage(salesUI("sales1"))
+#' server <- function(input, output, session) {
+#'   salesServer("sales1",
+#'               df = reactive({ sales }),
+#'               dropdowns = list(
+#'                 level_1 = "TERRITORY",
+#'                 level_2 = "CUSTOMERNAME",
+#'                 level_3 = "ORDERNUMBER")
+#'               ,
+#'               cols_for_table = c("TERRITORY", "CUSTOMERNAME", "ORDERNUMBER", "SALES")
+#'               )
+#' }
+#' shinyApp(ui, server)
+#' ui <- fluidPage(salesUI("cars"))
+#' server <- function(input, output, session) {
+#'   salesServer("cars",
+#'               df = reactive({ mtcars }),
+#'               dropdowns = list(
+#'                 level_1 = "cyl",
+#'                 level_2 = "gear",
+#'                 level_3 = "carb")
+#'               ,
+#'               cols_for_table = c("mpg", "cyl", "disp", "hp", "wt")
+#'   )
+#' }
+#' shinyApp(ui, server)
+#' }
+#'
+
+
 salesServer <- function(id, df, dropdowns, cols_for_table) {
   moduleServer(id, function(input, output, session) {
     # Store level_1 in a reactive value to ensure proper reactivity
@@ -128,35 +177,3 @@ salesServer <- function(id, df, dropdowns, cols_for_table) {
     })
   })
 }
-
-# App definition
-ui <- fluidPage(salesUI("sales1"))
-server <- function(input, output, session) {
-  salesServer("sales1",
-              df = reactive({ sales }),
-              dropdowns = list(
-                level_1 = "TERRITORY",
-                level_2 = "CUSTOMERNAME",
-                level_3 = "ORDERNUMBER")
-              ,
-              cols_for_table = c("TERRITORY", "CUSTOMERNAME", "ORDERNUMBER", "SALES")
-              )
-}
-shinyApp(ui, server)
-
-
-
-#
-# ui <- fluidPage(salesUI("cars"))
-# server <- function(input, output, session) {
-#   salesServer("cars",
-#               df = reactive({ mtcars }),
-#               dropdowns = list(
-#                 level_1 = "cyl",
-#                 level_2 = "gear",
-#                 level_3 = "carb")
-#               ,
-#               cols_for_table = c("mpg", "cyl", "disp", "hp", "wt")
-#   )
-# }
-# shinyApp(ui, server)

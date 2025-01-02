@@ -5,6 +5,13 @@
 #' @import dplyr
 #' @return A shiny module UI
 #' @export
+#' \donttest{
+#' ui <- fluidPage(salesUI("sales1"))
+#' server <- function(input, output, session) {
+#'   salesServer("sales1", df = reactive({ sales }))
+#' }
+#' shinyApp(ui, server)
+#' }
 salesUI <- function(id) {
   ns <- NS(id)
   ui <- tagList(
@@ -29,6 +36,14 @@ salesUI <- function(id) {
 #' @import dplyr
 #' @return A shiny module Server
 #' @export
+#' @examples
+#' \donttest{
+#' ui <- fluidPage(salesUI("sales1"))
+#' server <- function(input, output, session) {
+#'   salesServer("sales1", df = reactive({ sales }))
+#' }
+#' shinyApp(ui, server)
+#' }
 salesServer <- function(id, df) {
   moduleServer(id, function(input, output, session) {
     # Initialize reactive values

@@ -18,10 +18,12 @@ A shiny module server
 The pointMapServer module to generate the server logic
 }
 \examples{
+\donttest{
 ui <- fluidPage(pointMapUI("pointmaptest"))
 
 server <- function(input, output, session) {
   pointMapServer("pointmaptest", df = reactive({ covid }))
 }
 shinyApp(ui, server)
+}
 }

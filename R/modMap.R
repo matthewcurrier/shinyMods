@@ -11,6 +11,7 @@
 #' @import sf
 #' @export
 #' @examples
+#' \donttest{
 #' library(shiny)
 #' ui <- fluidPage(mapUI("map1"))
 #'
@@ -21,6 +22,7 @@
 #'
 #'  }
 #' shinyApp(ui, server)
+#' }
 
 mapUI <- function(id) {
   ns <- NS(id)
@@ -35,7 +37,30 @@ mapUI <- function(id) {
     leafletOutput(ns("county_map"), height = "800px")
   )
 }
-
+#' County Map Module UI
+#'
+#' @description Creates the UI portion of the county map module for displaying
+#'   demographic data choropleth visualizations.
+#'
+#' @param id The module ID used to create a namespace
+#'
+#' @return A Shiny module element containing the map interface
+#' @import leaflet
+#' @import sf
+#' @export
+#' @examples
+#' \donttest{
+#' library(shiny)
+#' ui <- fluidPage(mapUI("map1"))
+#'
+#' server <- function(input, output, session) {
+#'
+#'  # mydata <- readRDS(here("data", "county_eth.RDS"))
+#'  mapServer("map1", df = reactive({ county_pop }) )
+#'
+#'  }
+#' shinyApp(ui, server)
+#' }
 
 mapServer <- function(id, df) {
   moduleServer(id, function(input, output, session) {
