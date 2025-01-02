@@ -2,6 +2,7 @@
 
 export(leafletMapServer)
 export(leafletMapUI)
+export(mapServer)
 export(mapUI)
 export(pointMapServer)
 export(pointMapUI)

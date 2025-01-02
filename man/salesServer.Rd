@@ -27,3 +27,12 @@ The salesServer module to generate code.
 
 The salesServer module to generate code.
 }
+\examples{
+\donttest{
+ui <- fluidPage(salesUI("sales1"))
+server <- function(input, output, session) {
+  salesServer("sales1", df = reactive({ sales }))
+}
+shinyApp(ui, server)
+}
+}
