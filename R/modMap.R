@@ -37,13 +37,13 @@ mapUI <- function(id) {
     leafletOutput(ns("county_map"), height = "800px")
   )
 }
-#' County Map Module UI
+#' County Map Module Server
 #'
 #' @description Creates the UI portion of the county map module for displaying
 #'   demographic data choropleth visualizations.
 #'
 #' @param id The module ID used to create a namespace
-#'
+#' @param df The dataframe to pass
 #' @return A Shiny module element containing the map interface
 #' @import leaflet
 #' @import sf
