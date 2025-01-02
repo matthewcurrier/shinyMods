@@ -6,7 +6,6 @@
 #' @param id The module ID used to create a namespace
 #'
 #' @return A Shiny UI element containing the map interface
-#' @import shiny
 #' @import leaflet
 #' @import sf
 #' @export
