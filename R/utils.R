@@ -3,12 +3,10 @@
 #'
 #' @param ethnicity Character string specifying the ethnicity to query
 #' @return sf object with county geometries and population data
-#' @import tidycensus
-#' @import sf
 #' @examples
 #' \donttest {
 #' library(tidycensus)
-#' get_census_data("white")
+#' df <- get_census_data("white")
 #' }
 get_census_data <- function(ethnicity) {
   # Variable codes for different ethnicities
@@ -20,7 +18,7 @@ get_census_data <- function(ethnicity) {
   )
 
   # Get county geometry and demographic data
-  counties <- get_acs(
+  counties <- tidycensus::get_acs(
     geography = "county",
     variables = var_codes[[ethnicity]],
     year = 2020,
@@ -28,5 +26,5 @@ get_census_data <- function(ethnicity) {
   ) |>
     rename(population = estimate)
 
-  return(counties)
+
 }

@@ -18,6 +18,6 @@ Get Census Data
 \examples{
 \donttest {
 library(tidycensus)
-get_census_data("white")
+df <- get_census_data("white")
 }
 }
