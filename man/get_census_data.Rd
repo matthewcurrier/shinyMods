@@ -16,7 +16,7 @@ sf object with county geometries and population data
 Get Census Data
 }
 \examples{
-/donttest {
+\donttest {
 library(tidycensus)
 get_census_data("white")
 }
