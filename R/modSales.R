@@ -5,6 +5,7 @@
 #' @import dplyr
 #' @return A shiny module UI
 #' @export
+#' @examples
 #' \donttest{
 #' ui <- fluidPage(salesUI("sales1"))
 #' server <- function(input, output, session) {

@@ -44,6 +44,7 @@ salesUI <- function(id) {
 #' @param cols_for_table table columns to display in table
 #' @return A shiny module Server
 #' @export
+#' @examples
 #' \donttest{
 #' ui <- fluidPage(salesUI("sales1"))
 #' server <- function(input, output, session) {
