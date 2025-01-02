@@ -2,6 +2,7 @@
 #'
 #' @param ethnicity Character string specifying the ethnicity to query
 #' @return sf object with county geometries and population data
+#' @export
 #' @examples
 #' \donttest{
 #' df <- shinyMods::get_census_data("white")
