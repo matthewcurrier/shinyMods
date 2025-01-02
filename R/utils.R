@@ -3,7 +3,7 @@
 #' @param ethnicity Character string specifying the ethnicity to query
 #' @return sf object with county geometries and population data
 #' @examples
-#' \donttest {
+#' \donttest{
 #' library(tidycensus)
 #' df <- get_census_data("white")
 #' }
