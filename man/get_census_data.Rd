@@ -17,7 +17,6 @@ Get Census Data
 }
 \examples{
 \donttest{
-library(tidycensus)
-df <- get_census_data("white")
+df <- shinyMods::get_census_data("white")
 }
 }
