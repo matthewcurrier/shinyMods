@@ -4,8 +4,7 @@
 #' @return sf object with county geometries and population data
 #' @examples
 #' \donttest{
-#' library(tidycensus)
-#' df <- get_census_data("white")
+#' df <- shinyMods::get_census_data("white")
 #' }
 get_census_data <- function(ethnicity) {
   # Variable codes for different ethnicities
