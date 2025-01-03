@@ -7,3 +7,5 @@
 ^vignettes/articles$
 ^\.lintr$
 ^README\.Rmd$
+^vignettes/articles/\.quarto$
+^vignettes/articles/*_files$

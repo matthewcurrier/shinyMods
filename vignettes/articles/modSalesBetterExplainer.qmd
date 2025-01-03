@@ -1,0 +1,12 @@
+---
+title: "How does the modSalesBetter work?"
+knitr:
+  opts_chunk:
+    collapse: true
+    comment: '#>'
+---
+
+```{r}
+#| label: setup
+library(shinyMods)
+```
