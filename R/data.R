@@ -18,7 +18,12 @@
 #' @format ## `us_migration`
 #' A data frame with 52 rows and 7 columns
 "us_migration"
-
+#' A sample of paid search data
+#'
+#'
+#' @format ## `pss`
+#' A data frame with 3,466 rows and 15 columns
+"sales"
 
 
 

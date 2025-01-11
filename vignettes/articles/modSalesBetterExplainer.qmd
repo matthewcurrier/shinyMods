@@ -1,12 +1,52 @@
 ---
 title: "How does the modSalesBetter work?"
-knitr:
-  opts_chunk:
-    collapse: true
-    comment: '#>'
+format:
+  html:
+    code-fold: true
+    html-math-method: katex
 ---
 
-```{r}
-#| label: setup
-library(shinyMods)
+## Module Flow Visualization
+
+```{mermaid}
+flowchart TB
+    subgraph Input["Input Components"]
+        L1[Territory Dropdown]
+        L2[Customer Dropdown]
+        L3[Order Number Dropdown]
+        BTN1[Reset Button]
+        BTN2[Go Button]
+    end
+
+    subgraph ReactiveFlow["Reactive Data Flow"]
+        RV[Reactive Values Store]
+        FD1[Filter Data Level 1]
+        FD2[Filter Data Level 2]
+        FD3[Filter Data Level 3]
+    end
+
+    subgraph Output["Output Components"]
+        MSG[Message Display]
+        TBL[Data Table]
+    end
+
+    DF[(Input DataFrame)] --> RV
+    L1 --> FD1
+    FD1 --> L2
+    L2 --> FD2
+    FD2 --> L3
+    L3 --> FD3
+    
+    BTN1 --> |Reset All|RV
+    BTN2 --> |Trigger|TBL
+    
+    FD3 --> RV
+    RV --> MSG
+    RV --> TBL
+
+    style Input fill:#e1f5fe,stroke:#01579b
+    style ReactiveFlow fill:#f3e5f5,stroke:#4a148c
+    style Output fill:#e8f5e9,stroke:#1b5e20
 ```
+
+Note: This diagram shows the data flow and component interactions in the Shiny sales module. The module uses hierarchical dropdowns with reactive filtering and a table output triggered by a Go button.
