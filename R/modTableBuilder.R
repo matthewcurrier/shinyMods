@@ -33,6 +33,7 @@ modTblBuilderUI <- function(id) {
 #' @param id the reference id for module
 #' @param df a dataframe
 #' @param filters stuff here
+#' @param summary_fn your summary with metrics
 #' @return a UI module for tables
 #' @export
 #' @examples
@@ -41,7 +42,7 @@ modTblBuilderUI <- function(id) {
 #' }
 
 
-modTblBuilderServer <- function(id, df, filters){ #assuming df is a reactive!
+modTblBuilderServer <- function(id, df, filters, summary_fn){ #assuming df is a reactive!
   moduleServer(id, function(input, output, session) {
     stopifnot(is.reactive(df))
 
@@ -108,10 +109,16 @@ modTblBuilderServer <- function(id, df, filters){ #assuming df is a reactive!
     observeEvent(input$gobutton, {
       req(input[["dimensions"]], input[["metrics"]])
 
-      selected_cols <- c(input[["dimensions"]], input[["metrics"]])
+      # selected_cols <- c(input[["dimensions"]], input[["metrics"]])
+      # Apply the summary function with current selections
       rv$current_data <- df() |>
-        dplyr::select(dplyr::all_of(selected_cols)) |>
-        as.data.frame()
+        group_by(across(all_of(input$dimensions))) |>
+        summarise(
+          !!!summary_fn
+        ) |>
+        ungroup() |>
+        select(all_of(c(input$dimensions, input$metrics))) |>
+
 
       print(str(rv$current_data))
 
@@ -135,53 +142,32 @@ modTblBuilderServer <- function(id, df, filters){ #assuming df is a reactive!
 
 library(shiny)
 library(gt)
-myApp <- function() {
-  ui <- fluidPage(
-    modTblBuilderUI("tbl_small")
-  )
-  server <- function(input, output, session) {
-    options(shiny.maxRequestSize=30*1024^2)
-
-    modTblBuilderServer(
-      "tbl_small",
-      df = reactive({mtcars}),
-      filters = list(
-        dims = c("cyl", "vs", "am", "gear", "carb"),
-        metrics = c("mpg", "disp", "wt", "qsec")
-    )
-    )
-  }
-  shinyApp(ui, server)
-}
-
-myApp()
+library(dplyr)
+# my_metrics <- function(df, ...) {
+#   # test if is dataframe
+#   # test if specific columns are present: impressions, clicks, spend, pageviews
+#   # What should be done with missing values? Then test is treatment for NA
+#   # values is correct
+#   summarise(
+#     df,
+#     impressions = sum(impressions, na.rm = TRUE),
+#     clicks = sum(clicks, na.rm = TRUE),
+#     spend = sum(spend, na.rm = TRUE),
+#     cpc = sum(spend, na.rm = TRUE) / sum(clicks, na.rm = TRUE),
+#     cpm = sum(spend, na.rm = TRUE) / (sum(impressions, na.rm = TRUE) / 1000),
+#     ctr = sum(clicks, na.rm = TRUE) / sum(impressions, na.rm = TRUE)
+#   )
+# }
 
 
-
-my_metrics <- list(
-  create_metric(
-    "revenue",
-    function(df) sum(df$revenue, na.rm = TRUE),
-    "Total revenue"
-  ),
-  create_metric(
-    "conversion_rate",
-    function(df) sum(df$conversions, na.rm = TRUE) / sum(df$sessions, na.rm = TRUE),
-    "Conversion rate"
-  )
-)
-
-my_metrics <- list(
-  "impressions" = create_metric(
-    "impressions",
-    function(df) sum(df$impr, na.rm = TRUE),
-    "Total revenue"
-  ),
-  "cost_per_click" = create_metric(
-    "cost_per_click",
-    function(df) sum(df$pub_cost, na.rm = TRUE) / sum(df$clicks, na.rm = TRUE),
-    "Cost Per Click"
-  )
+sales_calculations <- list(
+  impressions = quo( sum(.data$impressions, na.rm = TRUE)),
+  clicks = quo( sum(.data$clicks, na.rm = TRUE)),
+  spend = quo( sum(.data$spend, na.rm = TRUE)),
+  count = quo( n()),
+  cpc = quo( sum(.data$spend, na.rm = TRUE) / sum(.data$clicks, na.rm = TRUE)),
+  cpm = quo( sum(.data$spend, na.rm = TRUE) / (sum(.data$impressions, na.rm = TRUE) / 1000)),
+  ctr = quo( sum(.data$clicks, na.rm = TRUE) / sum(.data$impressions, na.rm = TRUE))
 )
 
 myApp2 <- function() {
@@ -191,13 +177,21 @@ myApp2 <- function() {
   server <- function(input, output, session) {
     options(shiny.maxRequestSize=30*1024^2)
 
+    pss2 <- pss |>
+      rename(
+        impressions = impr,
+        spend = pub_cost
+      )
+
     modTblBuilderServer(
       "tbl_pss",
-      df = reactive({pss}),
+      df = reactive({pss2}),
       filters = list(
         dims = c("date", "publisher", "region", "branding", "device"),
-        metrics = names(my_metrics)
-      )
+        metrics = c("impressions", "clicks", "spend",
+                    "cpc", "cpm", "ctr", "count")
+      ),
+      summary_fn = sales_calculations
     )
   }
   shinyApp(ui, server)

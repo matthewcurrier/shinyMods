@@ -25,7 +25,16 @@ salesUI <- function(id) {
   ns <- NS(id)
   ui <- tagList(
     tags$script(
-      src = "https://cdn.jsdelivr.net/gh/Appsilon/shiny.tictoc@v0.2.0/shiny-tic-toc.min.js"
+      src = "
+
+
+
+
+
+
+
+
+      "
     ),
     selectInput(ns("lev1"), "Territory", choices = NULL),
     selectInput(ns("lev2"), "Customer", choices = NULL),

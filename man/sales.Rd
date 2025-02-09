@@ -9,14 +9,23 @@
 
 A data frame with 2,823 rows and 25 columns
 }
+
+\subsection{\code{pss}}{
+
+A data frame with 3,466 rows and 15 columns
+}
 }
 \source{
 \url{https://www.kaggle.com/datasets/kyanyoga/sample-sales-data}
 }
 \usage{
 sales
+
+sales
 }
 \description{
 A sales dataset suggested in the Mastering Shiny book
+
+A sample of paid search data
 }
 \keyword{datasets}
