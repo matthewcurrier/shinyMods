@@ -4,6 +4,8 @@
 # shinyMods
 
 <!-- badges: start -->
+
+[![R-CMD-check](https://github.com/matthewcurrier/shinyMods/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/matthewcurrier/shinyMods/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 The goal of shinyMods is to illustrate approaches to building shiny
