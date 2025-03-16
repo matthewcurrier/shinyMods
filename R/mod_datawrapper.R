@@ -126,10 +126,30 @@ library(bslib)
 library(DatawRappr)
 
 # Main application
+# Main application
 ui <- page_sidebar(
   title = "Datawrapper Chart Creator",
-  sidebar = datawrapper_ui("dw1"),
-  theme = bs_theme(version = 5),
+  sidebar = div(
+    style = "background-color: #f0f0f0; font-size: 0.9em;",
+    datawrapper_ui("dw1")
+  ),
+  theme = bs_theme(version = 5) |>
+    bs_add_rules(
+      "
+      .sidebar {
+        background-color: #f0f0f0 !important;
+      }
+      .sidebar .form-control {
+        font-size: 0.9em;
+      }
+      .sidebar .btn {
+        font-size: 0.9em;
+      }
+      .sidebar label {
+        font-size: .6em;
+      }
+      "
+    ),
   card(
     htmlOutput("dw1-chart_embed"),
     verbatimTextOutput("dw1-chart_url")

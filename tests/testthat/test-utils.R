@@ -62,3 +62,13 @@ test_that("summarise_metrics handles zero clicks/impressions", {
   expect_true(is.infinite(result$cpm))  # Division by zero
   expect_equal(result$spend, 300)
 })
+
+
+test_that("summarise_metrics returns a dataframe", {
+  test_df <- create_test_df()  # Already includes NAs
+
+  result <- summarise_metrics(test_df)
+
+
+  expect_equal(is.data.frame(result), TRUE)
+})

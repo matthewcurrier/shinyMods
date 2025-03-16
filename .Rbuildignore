@@ -5,7 +5,9 @@
 ^docs$
 ^pkgdown$
 ^vignettes/articles$
+^scripts
 ^\.lintr$
 ^README\.Rmd$
 ^vignettes/articles/\.quarto$
 ^vignettes/articles/*_files$
+^\.github$
